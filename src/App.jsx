@@ -41,7 +41,7 @@ export default function App() {
                 theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
               }`}
             >
-              {projectName} — Development of a Risk Management Tool
+              {projectName} 
             </p>
           </div>
 
