@@ -8,7 +8,7 @@ import {
 import { exportToExcel } from "./exportExcel";
 import { exportRisksToPDF } from "./pdfExport";
 
-const RiskDashboard = () => {
+const RiskDashboard = ({ theme }) => {
   const [risks, setRisks] = useState([]);
   const [riskCounter, setRiskCounter] = useState(1);
   const [heatmapView, setHeatmapView] = useState("initial");
@@ -29,11 +29,13 @@ const RiskDashboard = () => {
 
   const addRisk = () => {
     if (!formData.title || !formData.description) return;
-
+  
     const newRisk = {
       id: Date.now(),
       riskId: `R-${String(riskCounter).padStart(3, "0")}`,
       ...formData,
+      likelihood: Number(formData.likelihood),
+      impact: Number(formData.impact),
       mitigationStrategy: "",
       owner: "",
       status: "Open",
@@ -41,10 +43,10 @@ const RiskDashboard = () => {
       residualLikelihood: null,
       residualImpact: null,
     };
-
+  
     setRisks([...risks, newRisk]);
     setRiskCounter(riskCounter + 1);
-
+  
     setFormData({
       title: "",
       description: "",
@@ -149,18 +151,22 @@ const RiskDashboard = () => {
           className="border p-2 mb-2 w-full"
         />
 
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          className="border p-2 mb-4"
-        >
-          <option>Technical</option>
-          <option>Organisational</option>
-          <option>External</option>
-          <option>Project Management</option>
-          <option>Requirements</option>
-        </select>
+<select
+  name="category"
+  value={formData.category}
+  onChange={handleChange}
+  className={`border p-2 mb-4 rounded ${
+    theme === "dark"
+      ? "bg-[#071225] text-white border-gray-600"
+      : "bg-white text-gray-900 border-gray-300"
+  }`}
+>
+  <option>Technical</option>
+  <option>Organisational</option>
+  <option>External</option>
+  <option>Project Management</option>
+  <option>Requirements</option>
+</select>
 
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
@@ -236,39 +242,22 @@ const RiskDashboard = () => {
   {/* Heatmap Grid Wrapper */}
   <div className="flex items-start">
 
-    {/* Y Axis Label */}
-    <div className="flex flex-col justify-between mr-2 h-[260px]">
-      {[5,4,3,2,1].map((n) => (
-        <div key={n} className="h-12 flex items-center text-sm">
-          {n}
-        </div>
-      ))}
+{/* Y Axis Label */}
+<div className="flex flex-col mr-2">
+  {[5,4,3,2,1].map((n) => (
+    <div key={n} className="h-14 flex items-center justify-center text-sm">
+      {n}
     </div>
+  ))}
+</div>
 
     {/* Grid + X Labels */}
     <div>
       {/* Grid */}
-      <div className="grid grid-cols-5 gap-2">
-        {buildHeatmapGrid().flat().map((cell, index) => (
-          <div
-            key={index}
-            className={`
-              w-12 h-12 rounded flex items-center justify-center text-white text-sm font-bold
-              ${
-                cell.prob * cell.impact <= 4
-                  ? "bg-green-600"
-                  : cell.prob * cell.impact <= 9
-                  ? "bg-yellow-500"
-                  : cell.prob * cell.impact <= 16
-                  ? "bg-red-500"
-                  : "bg-red-800"
-              }
-            `}
-          >
-            {cell.risks.length > 0 && cell.risks.length}
-          </div>
-        ))}
-      </div>
+      <Heatmap
+  grid={buildHeatmapGrid()}
+  theme="dark"
+/>
 
       {/* X Axis Labels */}
       <div className="grid grid-cols-5 gap-2 mt-2">
@@ -288,7 +277,7 @@ const RiskDashboard = () => {
 
   {/* Likelihood Label */}
   <div className="mt-2 text-sm font-medium">
-    Likelihood ↑
+
   </div>
 </div>
 

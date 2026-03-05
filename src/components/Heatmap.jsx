@@ -1,64 +1,55 @@
 import React, { useState } from "react";
 
-function scoreColor(score) {
-  if (score >= 16) return "#9f1239"; // critical
-  if (score >= 9) return "#ef4444";  // high
-  if (score >= 5) return "#f59e0b";  // medium
-  return "#064e3b";                   // low
-}
+const getColor = (score) => {
+  if (score >= 20) return "bg-red-700";
+  if (score >= 15) return "bg-red-500";
+  if (score >= 10) return "bg-yellow-500";
+  if (score >= 5) return "bg-green-500";
+  return "bg-green-300";
+};
 
-export default function Heatmap({ grid = [], theme = "dark" }) {
-  const [hover, setHover] = useState(null);
+const Heatmap = ({ grid }) => {
+  const [hoveredCell, setHoveredCell] = useState(null);
 
   return (
-    <div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(5,56px)", gap: 10 }}>
-        {grid.flatMap((row, pIdx) =>
-          row.map((cell, iIdx) => {
-            const score = cell.prob * cell.impact;
-            const color = scoreColor(score);
-            const count = cell.risks.length;
-            return (
-              <div
-                key={`${pIdx}-${iIdx}`}
-                onMouseEnter={() => setHover({ ...cell, count })}
-                onMouseLeave={() => setHover(null)}
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: 12,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background: color,
-                  color: "#fff",
-                  fontWeight: 700,
-                  cursor: count ? "pointer" : "default",
-                  transition: "transform 120ms ease",
-                }}
-                title={`${count} risk(s) — P:${cell.prob} I:${cell.impact}`}
-              >
-                {count || ""}
-              </div>
-            );
-          })
-        )}
+    <div className="relative">
+
+      <div className="grid grid-cols-5 gap-2">
+        {grid.flat().map((cell, index) => {
+
+          const score = cell.prob * cell.impact;
+
+          return (
+            <div
+              key={index}
+              className={`w-14 h-14 flex items-center justify-center text-xs font-bold text-white rounded cursor-pointer ${getColor(score)}`}
+              onMouseEnter={() => setHoveredCell(cell)}
+              onMouseLeave={() => setHoveredCell(null)}
+            >
+              {cell.risks.length > 0 ? cell.risks.length : ""}
+            </div>
+          );
+        })}
       </div>
 
-      {hover && (
-        <div className={`${theme === "dark" ? "bg-[#071225] text-gray-200" : "bg-white text-gray-900"} mt-3 p-3 rounded-lg border shadow-lg`}>
-          <div className="font-semibold">P: {hover.prob} • I: {hover.impact} • {hover.count} risk(s)</div>
-          <div className="mt-2 text-sm">
-            {hover.risks.slice(0, 6).map(r => (
-              <div key={r.id} className="py-1 border-b last:border-b-0">
-                <div className="font-medium">{r.title}</div>
-                <div className="text-xs opacity-80">{r.owner || "—"} • {r.severity}</div>
-              </div>
-            ))}
-            {hover.count > 6 && <div className="text-xs opacity-70 mt-2">+{hover.count - 6} more</div>}
+      {hoveredCell && hoveredCell.risks.length > 0 && (
+        <div className="absolute left-full ml-4 top-0 bg-black text-white p-3 rounded shadow-lg w-64 z-50">
+
+          <div className="font-bold mb-2">
+            Risks in this cell
           </div>
+
+          {hoveredCell.risks.map((risk) => (
+            <div key={risk.id} className="text-xs mb-2 border-b border-gray-600 pb-1">
+              <div className="font-semibold">{risk.riskId}</div>
+              <div>{risk.title}</div>
+            </div>
+          ))}
         </div>
       )}
+
     </div>
   );
-}
+};
+
+export default Heatmap;
