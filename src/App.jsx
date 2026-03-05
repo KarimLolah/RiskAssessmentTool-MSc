@@ -73,8 +73,7 @@ export default function App() {
             theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
           }`}
         >
-          Proof of Concept — For MSc demonstration. No human participants or
-          external data collection.
+          Proof of Concept For MSc demonstration. 
         </footer>
       </div>
     </div>

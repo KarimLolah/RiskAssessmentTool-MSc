@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import Heatmap from "./Heatmap";
 import {
   calculateRiskScore,
   calculateResidualRisk,
 } from "./riskCalculations";
+import { exportToExcel } from "./exportExcel";
+import { exportRisksToPDF } from "./pdfExport";
 
 const RiskDashboard = () => {
   const [risks, setRisks] = useState([]);
@@ -65,9 +68,59 @@ const RiskDashboard = () => {
     setRisks(updated);
   };
 
+  // 🔥 UPDATED HEATMAP LOGIC (uses residual values if present)
+  const buildHeatmapGrid = () => {
+    const grid = [];
+
+    for (let p = 1; p <= 5; p++) {
+      const row = [];
+
+      for (let i = 1; i <= 5; i++) {
+        const cellRisks = risks.filter((r) => {
+          const likelihood = r.residualLikelihood
+            ? Number(r.residualLikelihood)
+            : Number(r.likelihood);
+
+          const impact = r.residualImpact
+            ? Number(r.residualImpact)
+            : Number(r.impact);
+
+          return likelihood === p && impact === i;
+        });
+
+        row.push({
+          prob: p,
+          impact: i,
+          risks: cellRisks,
+        });
+      }
+
+      grid.push(row);
+    }
+
+    return grid;
+  };
+
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Risk Management Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-4">
+        Risk Management Dashboard
+      </h1>
+
+
+<button
+  onClick={() => exportToExcel(risks, "Risk_Project")}
+  className="bg-purple-600 text-white px-4 py-2 rounded mb-6"
+>
+  Export to Excel
+</button>
+
+<button
+  onClick={() => exportRisksToPDF(risks)}
+  className="bg-red-600 text-white px-4 py-2 rounded ml-2"
+>
+  Export to PDF
+</button>
 
       {/* Add Risk Form */}
       <div className="border p-4 mb-6 rounded">
@@ -102,25 +155,37 @@ const RiskDashboard = () => {
           <option>Requirements</option>
         </select>
 
-        <input
-          type="number"
-          name="likelihood"
-          min="1"
-          max="5"
-          value={formData.likelihood}
-          onChange={handleChange}
-          className="border p-2 mr-2"
-        />
+        <div className="grid grid-cols-2 gap-4 mb-4">
+  <div>
+    <label className="block text-sm mb-1 font-medium">
+      Likelihood (1 = Rare, 5 = Almost Certain)
+    </label>
+    <input
+      type="number"
+      name="likelihood"
+      min="1"
+      max="5"
+      value={formData.likelihood}
+      onChange={handleChange}
+      className="border p-2 w-full"
+    />
+  </div>
 
-        <input
-          type="number"
-          name="impact"
-          min="1"
-          max="5"
-          value={formData.impact}
-          onChange={handleChange}
-          className="border p-2 mr-2"
-        />
+  <div>
+    <label className="block text-sm mb-1 font-medium">
+      Impact (1 = Low, 5 = Critical)
+    </label>
+    <input
+      type="number"
+      name="impact"
+      min="1"
+      max="5"
+      value={formData.impact}
+      onChange={handleChange}
+      className="border p-2 w-full"
+    />
+  </div>
+</div>
 
         <button
           onClick={addRisk}
@@ -128,6 +193,14 @@ const RiskDashboard = () => {
         >
           Add Risk
         </button>
+      </div>
+
+      {/* 🔥 Heatmap Section */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold mb-4">
+          Risk Heatmap (Initial / Residual)
+        </h2>
+        <Heatmap grid={buildHeatmapGrid()} theme="dark" />
       </div>
 
       {/* Risk List */}
