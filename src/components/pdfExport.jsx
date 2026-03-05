@@ -26,7 +26,7 @@ export async function exportRisksToPDF(risks) {
           <tr>
             <th style="border:1px solid #ddd;padding:8px;text-align:left">Title</th>
             <th style="border:1px solid #ddd;padding:8px">Category</th>
-            <th style="border:1px solid #ddd;padding:8px">Prob</th>
+            <th style="border:1px solid #ddd;padding:8px">Probability</th>
             <th style="border:1px solid #ddd;padding:8px">Impact</th>
             <th style="border:1px solid #ddd;padding:8px">Score</th>
             <th style="border:1px solid #ddd;padding:8px">Residual</th>
