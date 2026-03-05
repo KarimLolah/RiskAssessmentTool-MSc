@@ -10,14 +10,16 @@ export function exportToExcel(risks = [], projectName = "project") {
       Title: r.title,
       Description: r.description,
       Category: r.category,
-      Probability: r.probability,
+      Likelihood: r.likelihood,
       Impact: r.impact,
-      Score: r.score || (r.probability * r.impact),
-      Severity: r.severity || "",
+      InitialScore: r.likelihood * r.impact,
+      ResidualScore:
+        r.residualLikelihood && r.residualImpact
+          ? r.residualLikelihood * r.residualImpact
+          : "",
       Owner: r.owner || "",
       Status: r.status || "",
-      CreatedAt: r.createdAt || ""
-    }));
+     }));
 
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();

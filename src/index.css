@@ -1,5 +1,6 @@
-/* Tailwind v4 import (minimal) */
-@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Basic page defaults (avoid @apply in global selectors for v4) */
 html,
