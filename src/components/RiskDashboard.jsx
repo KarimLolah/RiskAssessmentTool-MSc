@@ -108,7 +108,6 @@ const RiskDashboard = ({ theme }) => {
   return (
     <div className="p-6">
 
-      {/* Header + Export Buttons */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">
           Risk Management Dashboard
@@ -131,7 +130,6 @@ const RiskDashboard = ({ theme }) => {
         </div>
       </div>
 
-      {/* Add Risk Form */}
       <div className="border p-4 mb-6 rounded">
         <input
           type="text"
@@ -208,13 +206,11 @@ const RiskDashboard = ({ theme }) => {
         </button>
       </div>
 
-      {/* Heatmap Section */}
 <div className="mb-10">
   <h2 className="text-xl font-bold mb-4">
     Risk Heatmap ({heatmapView === "initial" ? "Initial" : "Residual"})
   </h2>
 
-  {/* Toggle Buttons */}
   <div className="flex gap-3 mb-4">
     <button
       onClick={() => setHeatmapView("initial")}
@@ -239,10 +235,8 @@ const RiskDashboard = ({ theme }) => {
     </button>
   </div>
 
-  {/* Heatmap Grid Wrapper */}
   <div className="flex items-start">
 
-{/* Y Axis Label */}
 <div className="flex flex-col mr-2">
   {[5,4,3,2,1].map((n) => (
     <div key={n} className="h-14 flex items-center justify-center text-sm">
@@ -251,15 +245,12 @@ const RiskDashboard = ({ theme }) => {
   ))}
 </div>
 
-    {/* Grid + X Labels */}
     <div>
-      {/* Grid */}
       <Heatmap
   grid={buildHeatmapGrid()}
   theme="dark"
 />
 
-      {/* X Axis Labels */}
       <div className="grid grid-cols-5 gap-2 mt-2">
         {[1,2,3,4,5].map((n) => (
           <div key={n} className="w-12 text-center text-sm">
@@ -268,20 +259,17 @@ const RiskDashboard = ({ theme }) => {
         ))}
       </div>
 
-      {/* Impact Label */}
       <div className="text-center mt-2 text-sm font-medium">
         Impact →
       </div>
     </div>
   </div>
 
-  {/* Likelihood Label */}
   <div className="mt-2 text-sm font-medium">
 
   </div>
 </div>
 
-      {/* Risk List */}
       {risks.map((risk) => {
         const initialScore = calculateRiskScore(
           risk.likelihood,

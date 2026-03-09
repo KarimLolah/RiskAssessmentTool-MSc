@@ -1,10 +1,7 @@
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
-/**
- * exportRisksToPDF(risks)
- * Creates a printable report and downloads a PDF.
- */
+//creates a printable report and downloads a PDF.
 export async function exportRisksToPDF(risks) {
   try {
     const wrap = document.createElement("div");

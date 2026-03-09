@@ -1,9 +1,5 @@
 import * as XLSX from "xlsx";
 
-/**
- * exportToExcel(risks, projectName)
- * simple xlsx exporter — uses sheetjs
- */
 export function exportToExcel(risks = [], projectName = "project") {
   try {
     const data = risks.map(r => ({

@@ -80,7 +80,6 @@ export default function App() {
   );
 }
 
-/* Project selector (keeps it compact) */
 function ProjectSelector({ active, onChange, theme }) {
   const [list, setList] = useState(() => {
     try {

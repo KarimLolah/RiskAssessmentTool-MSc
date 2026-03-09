@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Basic page defaults (avoid @apply in global selectors for v4) */
 html,
 body {
   margin: 0;
@@ -15,13 +14,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Light theme helper (App toggles document.documentElement.classList) */
 .light-theme {
   --bg: #f8fafc;
   --text: #0f1724;
 }
 
-/* Small custom card style for consistent glass look (no @apply) */
 .card-glass {
   background: linear-gradient(
     180deg,
@@ -32,7 +29,6 @@ body {
   backdrop-filter: blur(6px);
 }
 
-/* Small helpers */
 input,
 textarea,
 select {
